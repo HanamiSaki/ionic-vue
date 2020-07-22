@@ -1,26 +1,3 @@
-const MongoClient = require('mongodb').MongoClient;
-const http = require('http');
-const httpServer = http.createServer();
-
-httpServer.listen(1080, () => {
-    console.log("running");
-
-    let data = {
-        $and:[{"username":"HanamiSaki"}, {"password":"admin"}]
-    }
-
-    const collection = new Connect(databaseInfo);
-    const strategy = new Strategy(data);
-
-    collection.init()
-    .then(col => {
-        return strategy.find(col)
-    })
-    .then(res => {
-        console.log(res)
-    })
-});
-
 let databaseInfo = {
     db: '学生管理系统',
     col: 'user',
@@ -36,12 +13,31 @@ let databaseInfo = {
     }
 }
 
+let findData = {
+    $and:[{"username":"HanamiSaki"}, {"password":"admin"}]
+}
+
+let insertData = {
+    username: "Hanami_Saki",
+    password: "admin"
+}
+
+let updateData = [
+    {$or:[{"username":"Hanami_Saki"}, {"password":"admin"}]}, 
+    {$set:{"password":"12345678", "root": "yes"}}
+]
+
+let deleteData = {
+    $and:[{"username":"Hanami_Saki"}, {"password":"12345678"}]
+}
+
 class Connect {
     constructor(info) {
         this.db = info.db;
         this.col = info.col;
         this.url = info.url;
         this.opt = info.opt;
+        this.data = null;
     }
 
     init() {
@@ -58,14 +54,58 @@ class Connect {
             });
         });
     }
+
+    setFindData(data) {
+        this.data = data
+    }
+
+    setInsertData(data) {
+        this.data = data
+    }
+
+    setUpdateData(data) {
+        this.data = data
+    }
+
+    setDeleteData(data) {
+        this.data = data
+    }
 }
 
 class Strategy {
-    constructor(data) {
-        this.data = data;
+    constructor(col) {
+        this.col = col
     }
 
-    find(col) {
-        return col.findOne(this.data);
+    findOne(data) {
+        return this.col.findOne(data)
+    }
+
+    findMany(data) {
+        return this.col.find(data).toArray()
+    }
+
+    findAll() {
+        return this.col.find().toArray()
+    }
+
+    insertOne(data) {
+        return this.col.insertOne(data);
+    }
+
+    updateOne(data) {
+        return this.col.updateOne(data[0], data[1])
+    }
+
+    updateMany(data) {
+        return this.col.updateMany(data[0], data[1])
+    }
+
+    deleteOne(data) {
+        return this.col.deleteOne(data);
+    }
+
+    deleteMany(data) {
+        return this.col.deleteMany(data);
     }
 }

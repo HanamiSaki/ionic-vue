@@ -4,17 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "client": "npm start --prefix client",
-    "start": "node ./server/server.js",
-    "dev": "concurrently \"npm start\" \"npm run client\""
+    "client": "npm start --prefix ./ionic-vue",
+    "server": "nodemon ./server/server.js",
+    "dev": "concurrently \"npm run client\" \"npm run server\""
   },
   "dependencies": {
     "concurrently": "^5.2.0"
   },
   "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "",
   "license": "ISC"
 }
